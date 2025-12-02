@@ -29,6 +29,35 @@ public class BrandService {
         return toDto(brand);
     }
 
+    public BrandDto createBrand(BrandDto brandDto) {
+        Brand brand = new Brand();
+        brand.setName(brandDto.getName());
+        brand.setDescription(brandDto.getDescription());
+        brand.setLogoUrl(brandDto.getLogoUrl());
+        
+        Brand savedBrand = brandRepository.save(brand);
+        return toDto(savedBrand);
+    }
+
+    public BrandDto updateBrand(Long id, BrandDto brandDto) {
+        Brand brand = brandRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Marca no encontrada con id: " + id));
+        
+        brand.setName(brandDto.getName());
+        brand.setDescription(brandDto.getDescription());
+        brand.setLogoUrl(brandDto.getLogoUrl());
+        
+        Brand updatedBrand = brandRepository.save(brand);
+        return toDto(updatedBrand);
+    }
+
+    public void deleteBrand(Long id) {
+        if (!brandRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Marca no encontrada con id: " + id);
+        }
+        brandRepository.deleteById(id);
+    }
+
     private BrandDto toDto(Brand brand) {
         BrandDto dto = new BrandDto();
         dto.setId(brand.getId());

@@ -32,6 +32,47 @@ public class CategoryService {
         return toDto(category);
     }
 
+    public CategoryDto createCategory(CategoryDto categoryDto) {
+        Category category = new Category();
+        category.setName(categoryDto.getName());
+        category.setDescription(categoryDto.getDescription());
+        
+        if (categoryDto.getParentId() != null) {
+            Category parent = categoryRepository.findById(categoryDto.getParentId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoría padre no encontrada con id: " + categoryDto.getParentId()));
+            category.setParentCategory(parent);
+        }
+        
+        Category savedCategory = categoryRepository.save(category);
+        return toDto(savedCategory);
+    }
+
+    public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoría no encontrada con id: " + id));
+        
+        category.setName(categoryDto.getName());
+        category.setDescription(categoryDto.getDescription());
+        
+        if (categoryDto.getParentId() != null) {
+            Category parent = categoryRepository.findById(categoryDto.getParentId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoría padre no encontrada con id: " + categoryDto.getParentId()));
+            category.setParentCategory(parent);
+        } else {
+            category.setParentCategory(null);
+        }
+        
+        Category updatedCategory = categoryRepository.save(category);
+        return toDto(updatedCategory);
+    }
+
+    public void deleteCategory(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoría no encontrada con id: " + id);
+        }
+        categoryRepository.deleteById(id);
+    }
+
     private CategoryDto toDto(Category category) {
         CategoryDto dto = new CategoryDto();
         dto.setId(category.getId());

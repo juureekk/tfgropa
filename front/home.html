@@ -3,29 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <style>
+        body { font-family: system-ui, Arial, sans-serif; max-width: 900px; margin: 24px auto; padding: 0 16px; }
+        h2 { margin-top: 24px; }
+        form { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+        form input, form select { padding: 6px 8px; }
+        ul { list-style: none; padding-left: 0; }
+        li { margin: 6px 0; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        li > span { flex: 1; }
+        button { padding: 6px 10px; }
+    </style>
 </head>
 <body>
-    
     <h2>Marcas</h2>
+    <form id="form-brand">
+        <input id="brand-name" type="text" placeholder="Nombre" required>
+        <input id="brand-description" type="text" placeholder="Descripción">
+        <input id="brand-logoUrl" type="text" placeholder="Logo URL">
+        <button type="submit">Crear marca</button>
+    </form>
     <ul id="marcas"></ul>
-    
+
     <h2>Categorías</h2>
+    <form id="form-category">
+        <input id="category-name" type="text" placeholder="Nombre" required>
+        <input id="category-description" type="text" placeholder="Descripción">
+        <select id="category-parent">
+            <option value="">Sin padre</option>
+        </select>
+        <button type="submit">Crear categoría</button>
+    </form>
     <ul id="categorias"></ul>
-    
+
     <h2>Productos</h2>
     <ul id="productos"></ul>
 
     <script>
+        const API_BASE = 'http://localhost:8080/api';
+        const ADMIN_BASE = API_BASE + '/admin';
+        let marcas = [];
+        let categorias = [];
 
         async function cargarMarcas() {
             try {
-                const response = await fetch('http://localhost:8080/api/brands');
-                const marcas = await response.json();
+                const response = await fetch(API_BASE + '/brands');
+                marcas = await response.json();
                 const lista = document.getElementById('marcas');
-                
+                lista.innerHTML = '';
                 marcas.forEach(marca => {
                     const li = document.createElement('li');
-                    li.textContent = `${marca.name} - ${marca.description}`;
+                    const span = document.createElement('span');
+                    span.textContent = (marca.name || '') + ' - ' + (marca.description || '');
+                    const btnEdit = document.createElement('button');
+                    btnEdit.textContent = 'Editar';
+                    btnEdit.onclick = () => editarMarcaForm(marca, li);
+                    const btnDelete = document.createElement('button');
+                    btnDelete.textContent = 'Eliminar';
+                    btnDelete.onclick = () => eliminarMarca(marca.id);
+                    li.append(span, btnEdit, btnDelete);
                     lista.appendChild(li);
                 });
             } catch (error) {
@@ -33,31 +69,160 @@
             }
         }
 
+        async function crearMarca(data) {
+            const res = await fetch(ADMIN_BASE + '/brands', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+            if (!res.ok) throw new Error('Error al crear marca');
+            return res.json();
+        }
+
+        async function actualizarMarca(id, data) {
+            const res = await fetch(ADMIN_BASE + '/brands/' + id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+            if (!res.ok) throw new Error('Error al actualizar marca');
+            return res.json();
+        }
+
+        async function eliminarMarca(id) {
+            if (!confirm('¿Eliminar marca?')) return;
+            const res = await fetch(ADMIN_BASE + '/brands/' + id, { method: 'DELETE' });
+            if (!res.ok) throw new Error('Error al eliminar marca');
+            await cargarMarcas();
+        }
+
+        function editarMarcaForm(marca, li) {
+            li.innerHTML = '';
+            const inputName = document.createElement('input');
+            inputName.placeholder = 'Nombre';
+            inputName.value = marca.name || '';
+            const inputDesc = document.createElement('input');
+            inputDesc.placeholder = 'Descripción';
+            inputDesc.value = marca.description || '';
+            const inputLogo = document.createElement('input');
+            inputLogo.placeholder = 'Logo URL';
+            inputLogo.value = marca.logoUrl || '';
+            const btnSave = document.createElement('button');
+            btnSave.textContent = 'Guardar';
+            btnSave.onclick = async () => {
+                try {
+                    await actualizarMarca(marca.id, { name: inputName.value.trim(), description: inputDesc.value.trim(), logoUrl: inputLogo.value.trim() });
+                    await cargarMarcas();
+                } catch (e) {
+                    console.error(e);
+                }
+            };
+            const btnCancel = document.createElement('button');
+            btnCancel.textContent = 'Cancelar';
+            btnCancel.onclick = () => cargarMarcas();
+            li.append(inputName, inputDesc, inputLogo, btnSave, btnCancel);
+        }
+
         async function cargarCategorias() {
             try {
-                const response = await fetch('http://localhost:8080/api/categories');
-                const categorias = await response.json();
+                const response = await fetch(API_BASE + '/categories');
+                categorias = await response.json();
                 const lista = document.getElementById('categorias');
-                
+                lista.innerHTML = '';
                 categorias.forEach(categoria => {
                     const li = document.createElement('li');
-                    li.textContent = `${categoria.name} - ${categoria.description}`;
+                    const span = document.createElement('span');
+                    span.textContent = (categoria.name || '') + ' - ' + (categoria.description || '');
+                    const btnEdit = document.createElement('button');
+                    btnEdit.textContent = 'Editar';
+                    btnEdit.onclick = () => editarCategoriaForm(categoria, li);
+                    const btnDelete = document.createElement('button');
+                    btnDelete.textContent = 'Eliminar';
+                    btnDelete.onclick = () => eliminarCategoria(categoria.id);
+                    li.append(span, btnEdit, btnDelete);
                     lista.appendChild(li);
                 });
+                actualizarOpcionesPadre();
             } catch (error) {
                 console.error('Error al cargar categorías:', error);
             }
         }
 
+        function actualizarOpcionesPadre() {
+            const select = document.getElementById('category-parent');
+            const current = select.value;
+            select.innerHTML = '';
+            const opt = document.createElement('option');
+            opt.value = '';
+            opt.textContent = 'Sin padre';
+            select.appendChild(opt);
+            categorias.forEach(cat => {
+                const o = document.createElement('option');
+                o.value = cat.id;
+                o.textContent = cat.name;
+                select.appendChild(o);
+            });
+            const exists = Array.from(select.options).some(o => o.value === current);
+            if (exists) select.value = current;
+        }
+
+        async function crearCategoria(data) {
+            const res = await fetch(ADMIN_BASE + '/categories', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+            if (!res.ok) throw new Error('Error al crear categoría');
+            return res.json();
+        }
+
+        async function actualizarCategoria(id, data) {
+            const res = await fetch(ADMIN_BASE + '/categories/' + id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+            if (!res.ok) throw new Error('Error al actualizar categoría');
+            return res.json();
+        }
+
+        async function eliminarCategoria(id) {
+            if (!confirm('¿Eliminar categoría?')) return;
+            const res = await fetch(ADMIN_BASE + '/categories/' + id, { method: 'DELETE' });
+            if (!res.ok) throw new Error('Error al eliminar categoría');
+            await cargarCategorias();
+        }
+
+        function editarCategoriaForm(categoria, li) {
+            li.innerHTML = '';
+            const inputName = document.createElement('input');
+            inputName.placeholder = 'Nombre';
+            inputName.value = categoria.name || '';
+            const inputDesc = document.createElement('input');
+            inputDesc.placeholder = 'Descripción';
+            inputDesc.value = categoria.description || '';
+            const selectParent = document.createElement('select');
+            const opt = document.createElement('option');
+            opt.value = '';
+            opt.textContent = 'Sin padre';
+            selectParent.appendChild(opt);
+            categorias.filter(c => c.id !== categoria.id).forEach(cat => {
+                const o = document.createElement('option');
+                o.value = cat.id;
+                o.textContent = cat.name;
+                selectParent.appendChild(o);
+            });
+            selectParent.value = categoria.parentId || '';
+            const btnSave = document.createElement('button');
+            btnSave.textContent = 'Guardar';
+            btnSave.onclick = async () => {
+                try {
+                    const parentId = selectParent.value === '' ? null : Number(selectParent.value);
+                    await actualizarCategoria(categoria.id, { name: inputName.value.trim(), description: inputDesc.value.trim(), parentId });
+                    await cargarCategorias();
+                } catch (e) {
+                    console.error(e);
+                }
+            };
+            const btnCancel = document.createElement('button');
+            btnCancel.textContent = 'Cancelar';
+            btnCancel.onclick = () => cargarCategorias();
+            li.append(inputName, inputDesc, selectParent, btnSave, btnCancel);
+        }
+
         async function cargarProductos() {
             try {
-                const response = await fetch('http://localhost:8080/api/products?page=0&size=10');
+                const response = await fetch(API_BASE + '/products?page=0&size=10');
                 const data = await response.json();
                 const lista = document.getElementById('productos');
-                
-                data.content.forEach(producto => {
+                lista.innerHTML = '';
+                (data.content || []).forEach(producto => {
                     const li = document.createElement('li');
-                    li.textContent = `${producto.name} - ${producto.brand.name} - $${producto.price}`;
+                    li.textContent = (producto.name || '') + ' - ' + (producto.brand?.name || '') + ' - $' + (producto.price ?? '');
                     lista.appendChild(li);
                 });
             } catch (error) {
@@ -65,10 +230,38 @@
             }
         }
 
+        document.getElementById('form-brand').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('brand-name').value.trim();
+            const description = document.getElementById('brand-description').value.trim();
+            const logoUrl = document.getElementById('brand-logoUrl').value.trim();
+            try {
+                await crearMarca({ name, description, logoUrl });
+                e.target.reset();
+                await cargarMarcas();
+            } catch (error) {
+                console.error('Error al crear marca:', error);
+            }
+        });
+
+        document.getElementById('form-category').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('category-name').value.trim();
+            const description = document.getElementById('category-description').value.trim();
+            const parentRaw = document.getElementById('category-parent').value;
+            const parentId = parentRaw === '' ? null : Number(parentRaw);
+            try {
+                await crearCategoria({ name, description, parentId });
+                e.target.reset();
+                await cargarCategorias();
+            } catch (error) {
+                console.error('Error al crear categoría:', error);
+            }
+        });
+
         cargarMarcas();
         cargarCategorias();
         cargarProductos();
-
     </script>
 </body>
 </html>

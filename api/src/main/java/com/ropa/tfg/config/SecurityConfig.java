@@ -42,6 +42,12 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/brands/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/admin/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/admin/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/admin/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/admin/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/admin/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/admin/**").permitAll()
                 .anyRequest().permitAll()
             );
         return http.build();
