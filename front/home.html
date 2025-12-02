@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    
+    <h2>Marcas</h2>
+    <ul id="marcas"></ul>
+    
+    <h2>Categorías</h2>
+    <ul id="categorias"></ul>
+    
+    <h2>Productos</h2>
+    <ul id="productos"></ul>
+
+    <script>
+
+        async function cargarMarcas() {
+            try {
+                const response = await fetch('http://localhost:8080/api/brands');
+                const marcas = await response.json();
+                const lista = document.getElementById('marcas');
+                
+                marcas.forEach(marca => {
+                    const li = document.createElement('li');
+                    li.textContent = `${marca.name} - ${marca.description}`;
+                    lista.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error al cargar marcas:', error);
+            }
+        }
+
+        async function cargarCategorias() {
+            try {
+                const response = await fetch('http://localhost:8080/api/categories');
+                const categorias = await response.json();
+                const lista = document.getElementById('categorias');
+                
+                categorias.forEach(categoria => {
+                    const li = document.createElement('li');
+                    li.textContent = `${categoria.name} - ${categoria.description}`;
+                    lista.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error al cargar categorías:', error);
+            }
+        }
+
+        async function cargarProductos() {
+            try {
+                const response = await fetch('http://localhost:8080/api/products?page=0&size=10');
+                const data = await response.json();
+                const lista = document.getElementById('productos');
+                
+                data.content.forEach(producto => {
+                    const li = document.createElement('li');
+                    li.textContent = `${producto.name} - ${producto.brand.name} - $${producto.price}`;
+                    lista.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error al cargar productos:', error);
+            }
+        }
+
+        cargarMarcas();
+        cargarCategorias();
+        cargarProductos();
+
+    </script>
+</body>
+</html>
