@@ -23,13 +23,19 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductVariantRepository variantRepository;
     private final ProductImageRepository imageRepository;
+    private final BrandRepository brandRepository;
+    private final CategoryRepository categoryRepository;
 
     public ProductService(ProductRepository productRepository,
                           ProductVariantRepository variantRepository,
-                          ProductImageRepository imageRepository) {
+                          ProductImageRepository imageRepository,
+                          BrandRepository brandRepository,
+                          CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.variantRepository = variantRepository;
         this.imageRepository = imageRepository;
+        this.brandRepository = brandRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public Page<ProductSummaryDto> getAllProducts(int page, int size) {
@@ -76,6 +82,110 @@ public class ProductService {
                 .map(this::toSummaryDto)
                 .limit(limit)
                 .collect(Collectors.toList());
+    }
+
+    public ProductDetailDto createProduct(ProductDetailDto productDto) {
+        if (productDto.getBrand() == null || productDto.getBrand().getId() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id de marca requerido");
+        }
+        if (productDto.getCategory() == null || productDto.getCategory().getId() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id de categoría requerido");
+        }
+
+        Brand brand = brandRepository.findById(productDto.getBrand().getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Marca no encontrada con id: " + productDto.getBrand().getId()));
+        Category category = categoryRepository.findById(productDto.getCategory().getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoría no encontrada con id: " + productDto.getCategory().getId()));
+
+        Product product = new Product();
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setPrice(productDto.getPrice());
+        product.setDiscountPrice(productDto.getDiscountPrice());
+        product.setBrand(brand);
+        product.setCategory(category);
+        product.setActive(productDto.isActive());
+        product.setFeatured(productDto.isFeatured());
+
+        Product saved = productRepository.save(product);
+        return toDetailDto(saved);
+    }
+
+    public ProductDetailDto updateProduct(Long id, ProductDetailDto productDto) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product no encontrado con id: " + id));
+
+        if (productDto.getBrand() == null || productDto.getBrand().getId() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id de marca requerido");
+        }
+        if (productDto.getCategory() == null || productDto.getCategory().getId() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id de categoría requerido");
+        }
+
+        Brand brand = brandRepository.findById(productDto.getBrand().getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Marca no encontrada con id: " + productDto.getBrand().getId()));
+        Category category = categoryRepository.findById(productDto.getCategory().getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoría no encontrada con id: " + productDto.getCategory().getId()));
+
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setPrice(productDto.getPrice());
+        product.setDiscountPrice(productDto.getDiscountPrice());
+        product.setBrand(brand);
+        product.setCategory(category);
+        product.setActive(productDto.isActive());
+        product.setFeatured(productDto.isFeatured());
+
+        Product updated = productRepository.save(product);
+        return toDetailDto(updated);
+    }
+
+    public void deleteProduct(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product no encontrado con id: " + id);
+        }
+        productRepository.deleteById(id);
+    }
+
+    public ProductVariantDto createVariant(Long productId, ProductVariantDto variantDto) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product no encontrado con id: " + productId));
+
+        ProductVariant variant = new ProductVariant();
+        variant.setProduct(product);
+        variant.setSize(variantDto.getSize());
+        variant.setColor(variantDto.getColor());
+        variant.setSku(variantDto.getSku());
+        variant.setStock(variantDto.getStock() != null ? variantDto.getStock() : 0);
+
+        ProductVariant saved = variantRepository.save(variant);
+        return toVariantDto(saved);
+    }
+
+    public ProductVariantDto updateVariant(Long id, ProductVariantDto variantDto) {
+        ProductVariant variant = variantRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Variant no encontrada con id: " + id));
+
+        if (variantDto.getProductId() != null) {
+            Product product = productRepository.findById(variantDto.getProductId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product no encontrado con id: " + variantDto.getProductId()));
+            variant.setProduct(product);
+        }
+
+        variant.setSize(variantDto.getSize());
+        variant.setColor(variantDto.getColor());
+        variant.setSku(variantDto.getSku());
+        variant.setStock(variantDto.getStock());
+
+        ProductVariant updated = variantRepository.save(variant);
+        return toVariantDto(updated);
+    }
+
+    public void deleteVariant(Long id) {
+        if (!variantRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Variant no encontrada con id: " + id);
+        }
+        variantRepository.deleteById(id);
     }
 
     private ProductSummaryDto toSummaryDto(Product product) {
