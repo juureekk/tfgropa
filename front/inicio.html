@@ -31,6 +31,14 @@
             margin-top: 30px;
         }
 
+        /* Todas las imágenes de marcas al mismo tamaño (mismo que Nike = 50px) */
+        .marcas img {
+            height: 100px;
+            width: auto;
+            object-fit: contain;
+            display: inline-block;
+        }
+
         .container h2 {
             text-align: center;
             margin-bottom: 10px;
@@ -45,12 +53,6 @@
         
 
     </style>
-<script>
-    fetch("header.html")
-        .then(res => res.text())
-        .then(html => document.getElementById("header").innerHTML = html);
-</script>
-
 <body class="bg-light">
         <div id="header"></div>
 
@@ -80,10 +82,10 @@
     <div class="marcas">
         <h3>Marcas Destacadas</h3>
         <ul class="d-flex flex-wrap justify-content-center align-items-center gap-4 list-unstyled my-4">
-            <li><img src="imagenes/1.jpg" alt="Marca 1" height="50" /></li>
-            <li><img src="imagenes/2.png" alt="Marca 2" height="50" /></li>
-            <li><img src="imagenes/3.png" alt="Marca 3" height="50" /></li>
-            <li><img src="imagenes/4.png" alt="Marca 4" height="50" /></li>
+            <li><img src="/img/Adidas_Logo.svg.png" alt="Adidas Logo"/></li>
+            <li><img src="/img/Logo_NIKE.svg.png" alt="Nike logo"/></li>
+            <li><img src="/img/New_balance_logo.png" alt="New Balance Logo"/></li>
+            <li><img src="/img/Puma-logo.svg.png" alt="Puma Logo"/></li>
         </ul>
     </div>
     <!--Esta es la sección de los productos destacados-->
@@ -177,106 +179,27 @@
             </div>
         </div>
     </div>
+        
+    <div id="footer"></div>
 
-    <!--Este es el footer-->
-    <footer>
-        <div class="container">
-            <footer class="py-5">
-                <div class="row">
-                    <div class="col-6 col-md-2 mb-3">
-                        <h5>Sneaker Shop</h5>
-                        <ul class="nav flex-column">
-                            <li class="nav-item mb-2">
-                                <a href="#" class="nav-link p-0 text-body-secondary">Home</a>
-                            </li>
-                            <li class="nav-item mb-2">
-                                <a href="#" class="nav-link p-0 text-body-secondary">Features</a>
-                            </li>
-                            <li class="nav-item mb-2">
-                                <a href="#" class="nav-link p-0 text-body-secondary">Pricing</a>
-                            </li>
-                            <li class="nav-item mb-2">
-                                <a href="#" class="nav-link p-0 text-body-secondary">FAQs</a>
-                            </li>
-                            <li class="nav-item mb-2">
-                                <a href="#" class="nav-link p-0 text-body-secondary">About</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-6 col-md-2 mb-3">
-                        <h5>Información</h5>
-                        <ul class="nav flex-column">
-                            <li class="nav-item mb-2">
-                                <a href="#" class="nav-link p-0 text-body-secondary">Sobre Nosotros</a>
-                            </li>
-                            <li class="nav-item mb-2">
-                                <a href="#" class="nav-link p-0 text-body-secondary">Envíos y devoluciones</a>
-                            </li>
-                            <li class="nav-item mb-2">
-                                <a href="#" class="nav-link p-0 text-body-secondary">Preguntas Frecuentes</a>
-                            </li>
-                            <li class="nav-item mb-2">
-                                <a href="#" class="nav-link p-0 text-body-secondary">Terminos y Condiciones</a>
-                            </li>
-                            <li class="nav-item mb-2">
-                                <a href="#" class="nav-link p-0 text-body-secondary">Políticas de Privacidad</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-6 col-md-2 mb-3">
-                        <h5>Contacto</h5>
-                        <ul class="nav flex-column">
-                            <li class="nav-item mb-2">
-                                <a href="#" class="nav-link p-0 text-body-secondary">📍C/Goya, 10</a>
-                            </li>
-                            <li class="nav-item mb-2">
-                               <a href="#" class="nav-link p-0 text-body-secondary">📧 soporte@sneaker.com</a> 
-                            </li>
-                            <li class="nav-item mb-2">       
-                                <a href="#" class="nav-link p-0 text-body-secondary"><span style='font-size:20px;'>&#128222;</span>+34 915 584 859</a>
-                            </li>
-                            <li class="nav-item mb-2">
-                                <a href="#" class="nav-link p-0 text-body-secondary"><span style='font-size:20px;'>&#128337;</span>L - V : 9:00-21:00</a>
-                            </li>
-                            <li class="nav-item mb-2">
-                                <a href="#" class="nav-link p-0 text-body-secondary"><span style='font-size:20px;'>&#128337;</span>Sábados: 10:00-20:00</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-5 offset-md-1 mb-3">
-                        <form>
-                            <h5>Subscribete a nuestra revista</h5>
-                            <p>Si quieres recibir notificaciones de nuevos productos o productos que esten en rebajas suscribete a nuestro....</p>
-                            <div class="d-flex flex-column flex-sm-row w-100 gap-2">
-                                <label for="newsletter1" class="visually-hidden">Correo Electrónico</label>
-                                <input id="newsletter1" type="email" class="form-control" placeholder="Correo Electrónico" />
-                                <button class="btn btn-primary" type="button">
-                                    Subscribirse
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
-                    <p>© 2025 Sneaker Shop, Inc. All rights reserved.</p>
-                    <ul class="list-unstyled d-flex">
-                        <li class="ms-3">
-                            <a class="link-body-emphasis" href="#" aria-label="Instagram">
-                                <svg class="bi" width="24" height="24">
-                                    <use xlink:href="#instagram"></use>
-                                </svg></a>
-                        </li>
-                        <li class="ms-3">
-                            <a class="link-body-emphasis" href="#" aria-label="Facebook"><svg class="bi" width="24"
-                                    height="24" aria-hidden="true">
-                                    <use xlink:href="#facebook"></use>
-                                </svg></a>
-                        </li>
-                    </ul>
-                </div>
-            </footer>
-        </div>
-    </footer>
-</body>
+    <script>
+            // Helper para cargar un fragmento HTML en un elemento por id
+            async function loadFragment(url, targetId) {
+                try {
+                    const res = await fetch(url, { cache: "no-cache" });
+                    if (!res.ok) throw new Error(res.status + " " + res.statusText);
+                    const html = await res.text();
+                    const el = document.getElementById(targetId);
+                    if (el) el.innerHTML = html;
+                    else console.warn("Elemento no encontrado:", targetId);
+                } catch (err) {
+                    console.error("Error cargando", url, err);
+                }
+            }
 
+            // Cargar header y footer
+            loadFragment("header.html", "header");
+            loadFragment("footer.html", "footer");
+        </script>
+    </body>
 </html>

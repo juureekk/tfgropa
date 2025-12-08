@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Footer</title>
+
+    <style>
+        footer {
+            background: #111;
+            color: #ddd;
+            padding: 50px 0;
+            font-family: Arial, sans-serif;
+        }
+
+        footer h5 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        footer a {
+            text-decoration: none;
+            color: #bbb;
+            transition: 0.3s;
+        }
+
+        footer a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 30px;
+        }
+
+        .newsletter input {
+            border: none;
+            padding: 10px;
+            width: 70%;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+        }
+
+        .newsletter button {
+            border: none;
+            padding: 10px 15px;
+            background: #0d6efd;
+            color: white;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .newsletter button:hover {
+            background: #0b5ed7;
+        }
+
+        .social-icons a {
+            color: #fff;
+            font-size: 22px;
+            margin-right: 15px;
+            transition: 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: #0d6efd;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            color: #999;
+        }
+        /* Urbana, atrevida, moderna */
+.font-urbana {
+    font-family: "Streetwear", "Blackbones", "Urban Jungle", 
+        "Impact", "Arial Black", sans-serif;
+
+    /*font-family: "Bebas Neue", "Anton", "Oswald", 
+        "Big Shoulders", "Arial Narrow", sans-serif;
+
+    font-family: "Monument Extended", "Druk Wide", "Eurostile Extended", 
+        "Söhne Breit", "Tahoma", sans-serif;
+
+    font-family: "Rust", "Destroy", "Stamp Act", 
+        "Grit Primer", "Impact", sans-serif;*/
+}
+
+    </style>
+</head>
+
+<body>
+
+<footer>
+    <div class="footer-container">
+
+        <div>
+            <h5 class="font-urbana">Sneaker Shop</h5>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Features</a></li>
+                <li><a href="#">Pricing</a></li>
+                <li><a href="#">FAQs</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h5 class="font-urbana">Información</h5>
+            <ul>
+                <li><a href="#">Sobre Nosotros</a></li>
+                <li><a href="#">Envíos y devoluciones</a></li>
+                <li><a href="#">Preguntas Frecuentes</a></li>
+                <li><a href="#">Términos y Condiciones</a></li>
+                <li><a href="#">Políticas de Privacidad</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h5 class="font-urbana">Contacto</h5>
+            <ul>
+                <li><a href="#">📍 C/Goya, 10</a></li>
+                <li><a href="#">📧 soporte@sneaker.com</a></li>
+                <li><a href="#">📞 +34 915 584 859</a></li>
+                <li><a href="#">⏰ L - V : 9:00 - 21:00</a></li>
+                <li><a href="#">⏰ Sábados: 10:00 - 20:00</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h5 class="font-urbana">Suscríbete</h5>
+            <p>Recibe notificaciones de nuevos productos y ofertas especiales.</p>
+            <div class="newsletter">
+                <input type="email" placeholder="Correo Electrónico" />
+                <button>Suscribirse</button>
+            </div>
+
+            <div class="social-icons" style="margin-top: 20px;">
+                <a href="#" aria-label="Instagram">📸</a>
+                <a href="#" aria-label="Facebook">📘</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="copyright font-urbana">
+        © 2025 Sneaker Shop, Inc. Todos los derechos reservados.
+    </div>
+</footer>
+
+</body>
+</html>
