@@ -25,7 +25,7 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<PagedResponse<ProductSummaryDto>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "20") int size) {
 
         Page<ProductSummaryDto> productPage = productService.getAllProducts(page, size);
 

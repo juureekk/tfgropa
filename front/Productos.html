@@ -111,7 +111,7 @@
 
         // Cargar productos
         async function cargarProductos() {
-            const res = await fetch("http://localhost:8080/api/products");
+            const res = await fetch("http://localhost:8080/api/products?page=0&size=1000");
             const data = await res.json();
             
             productosOriginales = data.content;
@@ -151,19 +151,14 @@
                 console.error("Error cargando", url, err);
             }
         }
-        // Cargar header y footer
-        loadFragment("header.html", "header");
-        loadFragment("footer.html", "footer");
-    </script>
-    <script>
-        function aplicarFiltros() {
+           function aplicarFiltros() {
 
-            // Marcas seleccionadas
+            // Aqui aplicamos el filtro de las marcas seleccionadas
             const marcasSeleccionadas = Array.from(
                 document.querySelectorAll("#filtro-marcas input:checked")
             ).map(el => el.value);
 
-            // Categorías seleccionadas
+            // y aqui aplicamos el filtro de las categorías seleccionadas
             const categoriasSeleccionadas = Array.from(
                 document.querySelectorAll("#filtro-categorias input:checked")
             ).map(el => el.value);
@@ -187,7 +182,7 @@
             mostrarProductos(productosFiltrados);
         }
 
-        // Actualizar valor de precio en tiempo real
+        // Actualizamos valor de precio cuando movemos la barra o slider
         const slider = document.getElementById("precioMax");
         const precioTexto = document.getElementById("precioValor");
 
@@ -200,9 +195,11 @@
             cargarCategorias();
             cargarProductos();
         };
-
-
+        // Cargar header y footer
+        loadFragment("header.html", "header");
+        loadFragment("footer.html", "footer");
     </script>
+    
 
 </body>
 
