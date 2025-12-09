@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        #buscador {
+            margin-top: 20px;
+        }
+
+        aside {
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    <div id="header"></div>
+    <div class="container" id="buscador">
+        <form class="form-inline">
+            <div class="input-group">
+                <input class="form-control" type="search" placeholder="Buscar producto" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Buscar &#128269</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- Filtros laterales -->
+            <aside class="col-md-3 col-lg-2 bg-light p-3 border-end">
+
+                <h5 class="mb-3">Filtros</h5>
+
+                <!-- Filtro por marca -->
+                <div class="mb-4">
+                    <h6>Marca</h6>
+                    <div id="filtro-marcas"></div>
+                </div>
+
+                <!-- Filtro por categoría -->
+                <div class="mb-4">
+                    <h6>Categoría</h6>
+                    <div id="filtro-categorias"></div>
+                </div>
+
+                <!-- Filtro por precio -->
+                <div class="mb-4">
+                    <h6>Precio</h6>
+                    <input type="range" id="precioMax" class="form-range" min="0" max="500" step="10">
+                    <span id="precioValor">500 €</span>
+                </div>
+
+                <button class="btn btn-dark w-100" onclick="aplicarFiltros()">Aplicar filtros</button>
+
+            </aside>
+
+            <!-- Zona de productos -->
+            <main class="col-md-9 col-lg-10 p-4">
+                <h3>Productos</h3>
+                <div id="lista-productos" class="row"></div>
+            </main>
+
+        </div>
+    </div>
+
+    </div>
+    <div class="container"></div>
+    <div id="footer"></div>
+    <script>
+        let productosOriginales = [];
+
+        // Cargar marcas
+        async function cargarMarcas() {
+            const res = await fetch("http://localhost:8080/api/brands");
+            const marcas = await res.json();
+            const contenedor = document.getElementById("filtro-marcas");
+            marcas.forEach(marca => {
+                contenedor.innerHTML += `
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="${marca.name}" id="marca-${marca.id}">
+        <label class="form-check-label" for="marca-${marca.id}">${marca.name}</label>
+      </div>
+    `;
+            });
+        }
+
+        // Cargar categorías
+        async function cargarCategorias() {
+            const res = await fetch("http://localhost:8080/api/categories");
+            const categorias = await res.json();
+
+            const contenedor = document.getElementById("filtro-categorias");
+            categorias.forEach(categoria => {
+                contenedor.innerHTML += `
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="${categoria.name}" id="cat-${categoria.id}">
+        <label class="form-check-label" for="cat-${categoria.id}">${categoria.name}</label>
+      </div>
+    `;
+            });
+        }
+
+        // Cargar productos
+        async function cargarProductos() {
+            const res = await fetch("http://localhost:8080/api/products");
+            const data = await res.json();
+            
+            productosOriginales = data.content;
+            console.log(productosOriginales);
+            mostrarProductos(productosOriginales);
+        }
+
+        // Mostrar productos
+        function mostrarProductos(productos) {
+            const contenedor = document.getElementById("lista-productos");
+            contenedor.innerHTML = "";
+            
+
+            productos.forEach(producto => {
+                contenedor.innerHTML += `
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <img src="${producto.imageUrl}" class="card-img-top" alt="${producto.name}">
+          <div class="card-body">
+            <h5>${producto.name}</h5>
+            <p>${producto.price} €</p>
+          </div>
+        </div>
+      </div> 
+    `;
+            });
+        }
+        async function loadFragment(url, targetId) {
+            try {
+                const res = await fetch(url, { cache: "no-cache" });
+                if (!res.ok) throw new Error(res.status + " " + res.statusText);
+                const html = await res.text();
+                const el = document.getElementById(targetId);
+                if (el) el.innerHTML = html;
+                else console.warn("Elemento no encontrado:", targetId);
+            } catch (err) {
+                console.error("Error cargando", url, err);
+            }
+        }
+        // Cargar header y footer
+        loadFragment("header.html", "header");
+        loadFragment("footer.html", "footer");
+    </script>
+    <script>
+        function aplicarFiltros() {
+
+            // Marcas seleccionadas
+            const marcasSeleccionadas = Array.from(
+                document.querySelectorAll("#filtro-marcas input:checked")
+            ).map(el => el.value);
+
+            // Categorías seleccionadas
+            const categoriasSeleccionadas = Array.from(
+                document.querySelectorAll("#filtro-categorias input:checked")
+            ).map(el => el.value);
+
+            // Precio máximo
+            const precioMax = document.getElementById("precioMax").value;
+
+            let productosFiltrados = productosOriginales.filter(p => {
+
+                const cumpleMarca = marcasSeleccionadas.length === 0 ||
+                    marcasSeleccionadas.includes(p.brand.name);
+
+                const cumpleCategoria = categoriasSeleccionadas.length === 0 ||
+                    categoriasSeleccionadas.includes(p.category.name);
+
+                const cumplePrecio = p.price <= precioMax;
+
+                return cumpleMarca && cumpleCategoria && cumplePrecio;
+            });
+
+            mostrarProductos(productosFiltrados);
+        }
+
+        // Actualizar valor de precio en tiempo real
+        const slider = document.getElementById("precioMax");
+        const precioTexto = document.getElementById("precioValor");
+
+        slider.addEventListener("input", () => {
+            precioTexto.innerText = slider.value + " €";
+        });
+
+        window.onload = () => {
+            cargarMarcas();
+            cargarCategorias();
+            cargarProductos();
+        };
+
+
+    </script>
+
+</body>
+
+</html>
