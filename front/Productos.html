@@ -60,6 +60,7 @@
                 </div>
 
                 <button class="btn btn-dark w-100" onclick="aplicarFiltros()">Aplicar filtros</button>
+                <button class="btn btn-dark w-100" onclick="borrarFiltros()">Borrar filtros</button>
 
             </aside>
 
@@ -111,7 +112,9 @@
 
         // Cargar productos
         async function cargarProductos() {
-            const res = await fetch("http://localhost:8080/api/products?page=0&size=1000");
+            /*Como en la api el controlador de productos tiene la paginacion por defecto page y size entonces le pasamos por url el tamaño de la pagina
+            y la cantidad de los productos en este caso le pasamos 500*/
+            const res = await fetch("http://localhost:8080/api/products?page=0&size=500");
             const data = await res.json();
             
             productosOriginales = data.content;
@@ -180,6 +183,21 @@
             });
 
             mostrarProductos(productosFiltrados);
+        }
+        function borrarFiltros(productosFiltrados){
+            document.querySelectorAll("#filtro-marcas input")
+            .forEach(input => input.checked = false);
+
+            document.querySelectorAll("#filtro-categorias input")
+            .forEach(input => input.checked = false);
+
+            let slider = document.getElementById("precioMax");
+            slider.value = slider.max;
+            document.getElementById("precioValor").textContent = slider.max + " €";
+
+            mostrarProductos(productosOriginales);
+
+
         }
 
         // Actualizamos valor de precio cuando movemos la barra o slider
