@@ -17,6 +17,7 @@ com\ropa\tfg\repository\ProductRepository.class
 com\ropa\tfg\controller\CategoryController.class
 com\ropa\tfg\model\Category.class
 com\ropa\tfg\dto\BrandDto.class
+com\ropa\tfg\controller\AdminController.class
 com\ropa\tfg\model\Product.class
 com\ropa\tfg\dto\ProductVariantDto.class
 com\ropa\tfg\RopaApplication.class

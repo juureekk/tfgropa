@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -8,53 +9,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 </head>
-    <style>
-        .boton-imagen {
-            background-image: url(imagenes/login.png);
-            background-repeat: no-repeat;
-            background-color: transparent;
-            background-size: 30px 30px;
-            background-position: center;
-            width: 30px;
-            height: 30px;
-        }
+<style>
+    .boton-imagen {
+        background-image: url(imagenes/login.png);
+        background-repeat: no-repeat;
+        background-color: transparent;
+        background-size: 30px 30px;
+        background-position: center;
+        width: 30px;
+        height: 30px;
+    }
 
-        #carousel img {
-            height: 500px;
-            object-fit: contain;
-        }
+    #carousel img {
+        height: 500px;
+        object-fit: contain;
+    }
 
-        .marcas h3 {
-            text-align: center;
-            margin-top: 30px;
-        }
+    .marcas h3 {
+        text-align: center;
+        margin-top: 30px;
+    }
 
-        /* Todas las imágenes de marcas al mismo tamaño (mismo que Nike = 50px) */
-        .marcas img {
-            height: 100px;
-            width: auto;
-            object-fit: contain;
-            display: inline-block;
-        }
+    .container h2 {
+        text-align: center;
+        margin-bottom: 10px;
+    }
 
-        .container h2 {
-            text-align: center;
-            margin-bottom: 10px;
-        }
+    .container {
+        margin-top: 20px;
+    }
 
-        .container {
-            margin-top: 20px;
-        }
-        #derechos{
-            text-align: center;
-        }
-        
+    #derechos {
+        text-align: center;
+    }
+</style>
 
-    </style>
 <body class="bg-light">
-        <div id="header"></div>
+    <div id="header"></div>
 
     <!--Aqui esta el funcionamineto del carrusel-->
     <div id="carousel" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true">
@@ -78,128 +70,153 @@
             <span class="visually-hidden">Siguiente</span>
         </button>
     </div>
-    <!--Aqui van la zona de las marcas destacadas(Iconos)-->
-    <div class="marcas">
-        <h3>Marcas Destacadas</h3>
-        <ul class="d-flex flex-wrap justify-content-center align-items-center gap-4 list-unstyled my-4">
-            <li><img src="/img/Adidas_Logo.svg.png" alt="Adidas Logo"/></li>
-            <li><img src="/img/Logo_NIKE.svg.png" alt="Nike logo"/></li>
-            <li><img src="/img/New_balance_logo.png" alt="New Balance Logo"/></li>
-            <li><img src="/img/Puma-logo.svg.png" alt="Puma Logo"/></li>
-        </ul>
-    </div>
-    <!--Esta es la sección de los productos destacados-->
+    <!-- productos destacados de la tienda -->
     <div class="container">
         <h2>Productos Destacados</h2>
-        <div id="destacados" class="row justify-content-center">
-            <div class="col-12 col-md-3 mb-3">
-                <div class="card h-100">
-                    <img src="imagenes/producto1.jpg" class="card-img-top" alt="Producto">
-                    <div class="card-body">
-                        <h5 class="card-title">Producto 1</h5>
-                        <p class="card-text">99.99 €</p>
-                        <a href="#" class="btn btn-primary">Añadir</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-3 mb-3">
-                <div class="card h-100">
-                    <img src="imagenes/producto2.jpg" class="card-img-top" alt="Producto">
-                    <div class="card-body">
-                        <h5 class="card-title">Producto 2</h5>
-                        <p class="card-text">89.99 €</p>
-                        <a href="#" class="btn btn-primary">Añadir</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-3 mb-3">
-                <div class="card h-100">
-                    <img src="imagenes/producto3.jpg" class="card-img-top" alt="Producto">
-                    <div class="card-body">
-                        <h5 class="card-title">Producto 3</h5>
-                        <p class="card-text">79.99 €</p>
-                        <a href="#" class="btn btn-primary">Añadir</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div id="destacados" class="row justify-content-center"></div>
     </div>
 
-    <!--Sección de las ofertas especiales-->
+    <!-- Ofertas especiales de la tienda -->
     <div class="container">
-        <h2>Ofertas Especiales de Nuestra Tienda</h2>
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-3 mb-3">
-                <div class="card h-100">
-                    <img src="..." class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the content.</p>
-                        <a href="#" class="btn btn-primary">Añadir</a>
-                        <a href="#" class="btn btn-primary">Añadir</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-3 mb-3">
-                <div class="card h-100">
-                    <img src="..." class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text...</p>
-                        <a href="#" class="btn btn-primary">HOLA</a>
-                        <a href="#" class="btn btn-primary">Añadir</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-3 mb-3">
-                <div class="card h-100">
-                    <img src="..." class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text...</p>
-                        <a href="#" class="btn btn-primary">ADIOS</a>
-                        <a href="#" class="btn btn-primary">Añadir</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-3 mb-3">
-                <div class="card h-100">
-                    <img src="..." class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text...</p>
-                        <a href="#" class="btn btn-primary">ADIOS2</a>
-                        <a href="#" class="btn btn-primary">Añadir</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <h2>Ofertas Especiales</h2>
+        <p class="text-center">¡No te pierdas nuestras mejores ofertas!</p>
+        <div id="especiales" class="row justify-content-center"></div>
     </div>
-        
+
+    <!-- Marcas que tiene la tienda -->
+    <div class="container">
+        <h2>Marcas</h2>
+        <div id="marcas" class="row justify-content-center"></div>
+    </div>
+
     <div id="footer"></div>
 
     <script>
-            // Helper para cargar un fragmento HTML en un elemento por id
-            async function loadFragment(url, targetId) {
-                try {
-                    const res = await fetch(url, { cache: "no-cache" });
-                    if (!res.ok) throw new Error(res.status + " " + res.statusText);
-                    const html = await res.text();
-                    const el = document.getElementById(targetId);
-                    if (el) el.innerHTML = html;
-                    else console.warn("Elemento no encontrado:", targetId);
-                } catch (err) {
-                    console.error("Error cargando", url, err);
-                }
-            }
+        /*Este es el fecth que muestra los productos destacados*/
+        async function cargarDestacados() {
+            try {
+                const res = await fetch("http://localhost:8080/api/products/featured");
+                const productos = await res.json();
 
-            // Cargar header y footer
-            loadFragment("header.html", "header");
-            loadFragment("footer.html", "footer");
-        </script>
-    </body>
+                const contenedor = document.getElementById("destacados");
+                contenedor.innerHTML = "";
+
+                for (let p of productos.slice(0, 6)) {
+
+                    const imagenRes = await fetch(`http://localhost:8080/api/products/${p.id}/images`);
+                    const imagenes = await imagenRes.json();
+
+                    const imageUrl = imagenes.length > 0
+                        ? imagenes[0].imageUrl
+                        : "imagenes/default.png";
+
+                    const card = `
+                <div class="col-12 col-md-3 mb-3">
+                    <div class="card h-100">
+                        <img src="${imageUrl}" class="card-img-top" alt="${p.name}">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">${p.name}</h5>
+                            <p class="card-text">${p.price} €</p>
+                            <button class="btn btn-primary">Añadir</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+                    contenedor.innerHTML += card;
+                }
+
+            } catch (e) {
+                console.error(" Error al conectar con la API:", e);
+            }
+        }
+
+
+        /*Este es el fect de cargar los productos especiales que tiene la tienda*/
+        async function cargarEspeciales() {
+            try {
+                const res = await fetch("http://localhost:8080/api/products/on-sale");
+                const productos = await res.json();
+                const contenedor = document.getElementById("especiales");
+
+                contenedor.innerHTML = "";
+
+                for (let producto of productos.slice(0, 6)) {
+                    const imagenRes = await fetch(`http://localhost:8080/api/products/${producto.id}/images`);
+                    const imagenes = await imagenRes.json();
+
+                    const imageUrl = imagenes.length > 0
+                        ? imagenes[0].imageUrl
+                        : "imagenes/default.png";
+
+                    contenedor.innerHTML += `
+                <div class="col-12 col-md-3 mb-3">
+                    <div class="card h-100">
+                        <img src="${imageUrl}" class="card-img-top">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">${producto.name}</h5>
+                            <p class="text-muted"><s>${producto.price} €</s></p>
+                            <p class="text-danger">${producto.discountPrice} €</p>
+                            <button class="btn btn-primary">Añadir</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+                }
+            } catch (error) {
+                console.error("Error cargando ofertas:", error);
+            }
+        }
+
+        // El fecth de cargar las marcas
+        async function cargarMarcas() {
+            try {
+                const res = await fetch("http://localhost:8080/api/brands");
+                const marcas = await res.json();
+                const contenedor = document.getElementById("marcas");
+
+                contenedor.innerHTML = "";
+
+                for (let marca of marcas) {
+                    contenedor.innerHTML += `
+                <div class="col-12 col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">${marca.name}</h5>
+                        </div>
+                    </div>
+                </div>
+            `;
+                }
+            } catch (error) {
+                console.error("Error cargando marcas:", error);
+            }
+        }
+
+        // Helper para cargar un fragmento HTML en un elemento por id
+        async function loadFragment(url, targetId) {
+            try {
+                const res = await fetch(url, { cache: "no-cache" });
+                if (!res.ok) throw new Error(res.status + " " + res.statusText);
+                const html = await res.text();
+                const el = document.getElementById(targetId);
+                if (el) el.innerHTML = html;
+                else console.warn("Elemento no encontrado:", targetId);
+            } catch (err) {
+                console.error("Error cargando", url, err);
+            }
+        }
+
+
+
+        // Cargar header y footer
+        loadFragment("header.html", "header");
+        loadFragment("footer.html", "footer");
+        window.onload = () => {
+            cargarDestacados();
+            cargarEspeciales();
+            cargarMarcas();
+        };
+    </script>
+</body>
+
 </html>
