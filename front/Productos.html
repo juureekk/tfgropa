@@ -18,6 +18,10 @@
             position: sticky;
             top: 0;
         }
+
+        #boton2 {
+            margin-top: 10px;
+        }
     </style>
 </head>
 
@@ -36,7 +40,7 @@
         <div class="row">
 
             <!-- Filtros laterales -->
-            <aside class="col-md-3 col-lg-2 bg-light p-3 border-end">
+            <aside id="panel-filtros" class="col-md-3 col-lg-2 bg-light p-3 border-end">
 
                 <h5 class="mb-3">Filtros</h5>
 
@@ -60,21 +64,21 @@
                 </div>
 
                 <button class="btn btn-dark w-100" onclick="aplicarFiltros()">Aplicar filtros</button>
-                <button class="btn btn-dark w-100" onclick="borrarFiltros()">Borrar filtros</button>
+                <button id="boton2" class="btn btn-dark w-100" onclick="borrarFiltros()">Borrar filtros</button>
 
             </aside>
+             <main class="col-md-9 col-lg-10 p-4">
+            <button class="btn btn-outline-dark mb-3" onclick="toggleFiltros()">
+                Mostrar / Ocultar filtros
+            </button>
 
-            <!-- Zona de productos -->
-            <main class="col-md-9 col-lg-10 p-4">
-                <h3>Productos</h3>
-                <div id="lista-productos" class="row"></div>
-            </main>
+            <h3>Productos</h3>
+            <div id="lista-productos" class="row"></div>
+        </main>
 
         </div>
     </div>
 
-    </div>
-    <div class="container"></div>
     <div id="footer"></div>
     <script>
         let productosOriginales = [];
@@ -116,7 +120,7 @@
             y la cantidad de los productos en este caso le pasamos 500*/
             const res = await fetch("http://localhost:8080/api/products?page=0&size=500");
             const data = await res.json();
-            
+
             productosOriginales = data.content;
             console.log(productosOriginales);
             mostrarProductos(productosOriginales);
@@ -126,7 +130,7 @@
         function mostrarProductos(productos) {
             const contenedor = document.getElementById("lista-productos");
             contenedor.innerHTML = "";
-            
+
 
             productos.forEach(producto => {
                 contenedor.innerHTML += `
@@ -154,7 +158,7 @@
                 console.error("Error cargando", url, err);
             }
         }
-           function aplicarFiltros() {
+        function aplicarFiltros() {
 
             // Aqui aplicamos el filtro de las marcas seleccionadas
             const marcasSeleccionadas = Array.from(
@@ -184,12 +188,12 @@
 
             mostrarProductos(productosFiltrados);
         }
-        function borrarFiltros(productosFiltrados){
+        function borrarFiltros(productosFiltrados) {
             document.querySelectorAll("#filtro-marcas input")
-            .forEach(input => input.checked = false);
+                .forEach(input => input.checked = false);
 
             document.querySelectorAll("#filtro-categorias input")
-            .forEach(input => input.checked = false);
+                .forEach(input => input.checked = false);
 
             let slider = document.getElementById("precioMax");
             slider.value = slider.max;
@@ -207,6 +211,25 @@
         slider.addEventListener("input", () => {
             precioTexto.innerText = slider.value + " €";
         });
+        let filtrosVisibles = true;
+
+        function toggleFiltros() {
+            const filtros = document.getElementById("panel-filtros");
+            const productos = document.querySelector("main");
+
+            if (filtrosVisibles) {
+                filtros.classList.add("d-none");
+                productos.classList.remove("col-md-9", "col-lg-10");
+                productos.classList.add("col-12");
+            } else {
+                filtros.classList.remove("d-none");
+                productos.classList.remove("col-12");
+                productos.classList.add("col-md-9", "col-lg-10");
+            }
+
+            filtrosVisibles = !filtrosVisibles;
+        }
+
 
         window.onload = () => {
             cargarMarcas();
@@ -217,7 +240,7 @@
         loadFragment("header.html", "header");
         loadFragment("footer.html", "footer");
     </script>
-    
+
 
 </body>
 
