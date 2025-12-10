@@ -22,7 +22,45 @@
         #boton2 {
             margin-top: 10px;
         }
+
+        @media (max-width: 768px) {
+
+            /* El panel de filtros inicia oculto y a pantalla completa si se habilita */
+            #panel-filtros {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 260px;
+                background: white;
+                z-index: 9999;
+                overflow-y: auto;
+                border-right: 1px solid #ccc;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+            }
+
+            #panel-filtros.mostrar {
+                transform: translateX(0);
+            }
+
+            /* El main debe ocupar todo */
+            main {
+                width: 100% !important;
+            }
+
+            /* El botón queda siempre visible */
+            .btn-toggle-filtros {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 10000;
+                border-radius: 50px;
+                padding: 12px 18px;
+            }
+        }
     </style>
+
 </head>
 
 <body class="bg-light">
@@ -67,18 +105,52 @@
                 <button id="boton2" class="btn btn-dark w-100" onclick="borrarFiltros()">Borrar filtros</button>
 
             </aside>
-             <main class="col-md-9 col-lg-10 p-4">
-            <button class="btn btn-outline-dark mb-3" onclick="toggleFiltros()">
-                Mostrar / Ocultar filtros
-            </button>
+            <main class="col-md-9 col-lg-10 p-4">
+                <button class="btn btn-outline-dark mb-3 btn-toggle-filtros" onclick="toggleFiltros()">
+                    Mostrar / Ocultar filtros
+                </button>
+                <!--Aqui va la zona de productos mas las opciones de ordenamiento por precio....-->
+                <div class="toolbar js-Toolbar">
+                    <div class="toolbar__title">
+                        <div class="Search-title">
+                            <span class="js-Search-title">
+                                Toda la ropa
+                            </span>
+                            <span class="Search-titleCount js-ContadorProductos">
+                                (1664)
+                            </span>
+                        </div>
+                    </div>
+                    <div class="toolbar__switchs">
+                        <span class="toolbar__switchSort">
+                            <label class="toolbar__sortLabel" for="barraOpciones">Ordenar por </label>
+                            <span class="toolbar__sortForm" data-automation-id="header-search-filter-block">
+                                <select id="barraOpciones" class="toolbar__sortSelect js-SearchSorter"
+                                    data-automation-id="open-header-search-filter-button">
+                                    <option value="0" selected data-automation-id="header-search-filter-0">Destacados
+                                    </option>
+                                    <option value="5" data-automation-id="header-search-filter-5">Más baratos primero
+                                    </option>
+                                    <option value="500" data-automation-id="header-search-filter-500">Más caros primero
+                                    </option>
+                                    <option value="600" data-automation-id="header-search-filter-600">Especiales
+                                    </option>
+                                </select>
+                                <svg aria-hidden="true" class="toolbar__sortSelectArrow f-icon" data-automation-id=""
+                                    focusable="false" height="20" role="">
+                                    <use xlink:href="/Assets/dist/nav/_a49552e6b0c2ad32.svg#$" />
+                                </svg>
+                            </span>
+                        </span>
 
-            <h3>Productos</h3>
-            <div id="lista-productos" class="row"></div>
-        </main>
-
+                    </div>
+                </div>
+                <h3>Productos</h3>
+                <div id="lista-productos" class="row"></div>
+            </main>
         </div>
     </div>
-
+    <!--Sección  del footer-->
     <div id="footer"></div>
     <script>
         let productosOriginales = [];
@@ -145,6 +217,7 @@
       </div> 
     `;
             });
+            ContadorProductos(productos.length);
         }
         async function loadFragment(url, targetId) {
             try {
@@ -185,9 +258,12 @@
 
                 return cumpleMarca && cumpleCategoria && cumplePrecio;
             });
+            let opciones = document.getElementById("barraOpciones").value;
+            productosFiltrados = ordenarLista(productosFiltrados, opciones);
 
             mostrarProductos(productosFiltrados);
         }
+        /*Funcion para el borrado de los filtros seleccionados*/
         function borrarFiltros(productosFiltrados) {
             document.querySelectorAll("#filtro-marcas input")
                 .forEach(input => input.checked = false);
@@ -211,10 +287,21 @@
         slider.addEventListener("input", () => {
             precioTexto.innerText = slider.value + " €";
         });
-        let filtrosVisibles = true;
+
+        /*Funcion para mostrar/ocultar la seccion de los filtros*/
+
+        let filtrosVisibles = false;
 
         function toggleFiltros() {
             const filtros = document.getElementById("panel-filtros");
+
+            // En móvil usamos la clase "mostrar"
+            if (window.innerWidth <= 768) {
+                filtros.classList.toggle("mostrar");
+                return;
+            }
+
+            // En escritorio seguimos usando bootstrap
             const productos = document.querySelector("main");
 
             if (filtrosVisibles) {
@@ -230,7 +317,47 @@
             filtrosVisibles = !filtrosVisibles;
         }
 
+        /*Funciones para el funcionamiento de la ordenacion de los productos y cantidad que se muestra*/
 
+        function ContadorProductos(num) {
+            document.querySelector(".js-ContadorProductos").textContent = `(${num})`;
+        }
+        function ordenarProductos() {
+            let opciones = document.getElementById("barraOpciones").value;
+            let productosOrdenados = [...productosOriginales];
+            switch (opciones) {
+                case "5":
+                    productosOrdenados.sort((a, b) => a.price - b.price);
+                    break;
+                case "500":
+                    productosOrdenados.sort((a, b) => b.price - a.price);
+                    break;
+                case "600":
+                    productosOrdenados = productosOriginales.filter(p => p.featured === true);
+                    break;
+                default:
+                    productosOrdenados = [...productosOriginales];
+            }
+            mostrarProductos(productosOrdenados);
+        }
+
+        function ordenarLista(lista, opcion) {
+            let productosOrdenados = [...lista];
+            switch (opcion) {
+                case "5":
+                    productosOrdenados.sort((a, b) => a.price - b.price);
+                    break;
+                case "500":
+                    productosOrdenados.sort((a, b) => b.price - a.price);
+                    break;
+                case "600":
+                    productosOrdenados = lista.filter(p => p.featured === true);
+                    break;
+                default:
+                    productosOrdenados = [...lista];
+            }
+            return productosOrdenados;
+        }
         window.onload = () => {
             cargarMarcas();
             cargarCategorias();
