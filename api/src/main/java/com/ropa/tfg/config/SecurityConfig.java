@@ -48,6 +48,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/admin/**").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/admin/**").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/admin/**").permitAll()
+                .requestMatchers("/api/uploads/**").permitAll()
+                .requestMatchers("/uploads/**").permitAll()
                 .anyRequest().permitAll()
             );
         return http.build();
