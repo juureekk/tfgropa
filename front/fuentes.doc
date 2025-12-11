@@ -1,0 +1,13 @@
+.font-urbana {
+    font-family: "Streetwear", "Blackbones", "Urban Jungle", 
+        "Impact", "Arial Black", sans-serif;
+
+    /*font-family: "Bebas Neue", "Anton", "Oswald", 
+        "Big Shoulders", "Arial Narrow", sans-serif;
+
+    font-family: "Monument Extended", "Druk Wide", "Eurostile Extended", 
+        "Söhne Breit", "Tahoma", sans-serif;
+
+    font-family: "Rust", "Destroy", "Stamp Act", 
+        "Grit Primer", "Impact", sans-serif;*/
+}
