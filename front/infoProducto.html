@@ -1,14 +1,249 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Page Title</title>
+    <title>Info Producto</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <script src='main.js'></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        body {
+            background: #f8f8f8;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .producto-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .producto-img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+        }
+
+        .producto-titulo {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .producto-precio {
+            font-size: 1.7rem;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .producto-descripcion {
+            color: #555;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+
+        .btn-principal {
+            background: black;
+            color: white;
+            padding: 12px 28px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            transition: 0.2s ease-in-out;
+            width: 230px;
+        }
+
+        .btn-principal:hover {
+            background: #333;
+            color: #fff;
+        }
+
+        #volver-btn {
+            display: block;
+            margin: 50px auto;
+            width: 260px;
+        }
+
+        .favorito {
+            font-size: 26px;
+            margin-left: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .favorito:hover {
+            color: red;
+        }
+
+        .opcion-talla.active,
+        .opcion-color.active {
+            background: black !important;
+            color: white !important;
+        }
+
+        @media(max-width: 768px) {
+            .producto-titulo {
+                margin-top: 20px;
+                text-align: center;
+            }
+
+            .producto-precio {
+                text-align: center;
+            }
+
+            .btn-principal {
+                width: 100%;
+            }
+
+            .favorito {
+                display: block;
+                margin: 15px auto;
+            }
+        }
+    </style>
 </head>
-<body>
-    
+
+<body class="bg-light">
+    <div id="header"></div>
+
+    <div class="container mt-5">
+        <div id="producto-informacion" class="producto-container row"></div>
+    </div>
+
+    <div class="text-center mt-5 mb-5">
+        <a class="btn btn-dark btn-lg" href="Productos.html">Volver a productos</a>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        let variantes = [];
+        let tallaSeleccionada = null;
+        let colorSeleccionado = null;
+        let varianteSeleccionada = null;
+
+        /*Funcion de cargar el footer y header*/
+        async function loadFragment(url, targetId) {
+            const res = await fetch(url, { cache: "no-cache" });
+            const html = await res.text();
+            document.getElementById(targetId).innerHTML = html;
+        }
+
+        loadFragment("header.html", "header");
+        loadFragment("footer.html", "footer");
+
+        async function cargarProducto() {
+            let info = new URLSearchParams(window.location.search);
+            let id = info.get("id");
+
+            if (!id) {
+                document.getElementById("producto-informacion").innerHTML =
+                    "<h3>El producto no se ha podido encontrar</h3>";
+                return;
+            }
+
+            let respuesta = await fetch(`http://localhost:8080/api/products/${id}`);
+            let producto = await respuesta.json();
+
+            variantes = producto.variants || [];
+            let tallas = [...new Set(variantes.map(v => v.size))];
+            let colores = [...new Set(variantes.map(v => v.color))];
+
+            let contenido = document.getElementById("producto-informacion");
+
+            contenido.innerHTML = `
+        <div class="col-md-6">
+            <img src="${producto.imageUrl}" class="producto-img">
+        </div>
+
+        <div class="col-md-6">
+            <h2 class="producto-titulo">${producto.name}</h2>
+            <p class="text-muted">Marca: ${producto.brand.name}</p>
+
+            <p class="producto-precio">Precio: ${producto.price} €</p>
+
+            <p class="producto-descripcion">Descripcion: ${producto.description}</p>
+
+            <h5>Tallas</h5>
+            <div id="tallas-container">
+                ${tallas
+                    .map(talla => `<button class="btn btn-outline-dark opcion-talla m-1" data-talla="${talla}">${talla}</button>`)
+                    .join("")}
+            </div>
+
+            <h5 class="mt-3">Colores</h5>
+            <div id="colores-container">
+                ${colores
+                    .map(color => `<button class="btn btn-outline-secondary opcion-color m-1" data-color="${color}">${color}</button>`)
+                    .join("")}
+            </div>
+
+            <button class="btn-principal mt-4" disabled>Añadir a la cesta</button>
+            <span class="favorito">♡</span>
+        </div>
+        `;
+        }
+
+        /*Elegimos el color y la talla*/
+        document.addEventListener("click", e => {
+            if (e.target.classList.contains("opcion-talla")) {
+                tallaSeleccionada = e.target.dataset.talla;
+
+                document.querySelectorAll(".opcion-talla").forEach(b => b.classList.remove("active"));
+                e.target.classList.add("active");
+
+                buscarVariante();
+            }
+
+            /*Eleccion del color*/
+            if (e.target.classList.contains("opcion-color")) {
+                colorSeleccionado = e.target.dataset.color;
+
+                document.querySelectorAll(".opcion-color").forEach(b => b.classList.remove("active"));
+                e.target.classList.add("active");
+
+                buscarVariante();
+            }
+
+            /*Aqui añadimos a la cesta*/
+            if (e.target.classList.contains("btn-principal")) {
+                if (!varianteSeleccionada) return;
+                alert("Añadido a la cesta → Variante ID: " + varianteSeleccionada.id);
+            }
+        });
+
+        /*Funcion de la variante*/
+        function buscarVariante() {
+            if (!tallaSeleccionada || !colorSeleccionado) return;
+
+            varianteSeleccionada = variantes.find(v =>
+                v.size === tallaSeleccionada && v.color === colorSeleccionado
+            );
+
+            let boton = document.querySelector(".btn-principal");
+
+            if (!varianteSeleccionada) {
+                boton.disabled = true;
+                boton.innerText = "No disponible";
+                return;
+            }
+
+            if (varianteSeleccionada.stock === 0) {
+                boton.disabled = true;
+                boton.innerText = "Sin stock";
+            } else {
+                boton.disabled = false;
+                boton.innerText = "Añadir a la cesta";
+            }
+        }
+
+        window.onload = cargarProducto;
+    </script>
+
 </body>
 </html>
