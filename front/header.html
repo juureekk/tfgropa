@@ -3,34 +3,33 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Header </title>
+    <title>Header</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
     <style>
-        header { transition: 0.25s ease-in-out; }
+        header { transition: .25s ease-in-out; }
         .header-grid {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 0.5rem 0.8rem;
+            padding: .5rem .8rem;
             max-width: 1200px;
-            margin: 0.5rem auto;
+            margin: .5rem auto;
             width: 100%;
         }
 
-        /* LOGO: mucho más grande */
         .brand {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: .6rem;
             text-decoration: none;
             flex: 0 0 auto;
         }
-        .brand img { height: 80px; width: auto; } /* aumentado */
+        .brand img { height: 80px; width: auto; }
         .brand .title { font-size: 1.4rem; margin: 0; font-weight: 700; color: #111; }
 
-        /* Navegación principal: en la misma línea */
         .nav-links {
             display: flex;
             gap: 1rem;
@@ -42,51 +41,29 @@
             color: #222;
             text-decoration: none;
             font-weight: 500;
-            font-size: 0.95rem;
-            padding: 0.25rem 0.4rem;
+            font-size: .95rem;
+            padding: .25rem .4rem;
             border-radius: 6px;
         }
-        .nav-links a:hover {
-            color: #0d6efd;
-            background: rgba(13,110,253,0.06);
-        }
+        .nav-links a:hover { color: #0d6efd; background: rgba(13,110,253,0.06); }
 
-        /* Agrupación derecha: buscador justo antes de los iconos */
-        .right-group {
-            display: flex;
-            gap: 0.6rem;
-            align-items: center;
-            flex: 0 0 auto;
-        }
+        .right-group { display: flex; gap: .6rem; align-items: center; flex: 0 0 auto; }
 
         .search-pill {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: .5rem;
             background: #f8f9fa;
-            padding: 0.28rem 0.6rem;
+            padding: .28rem .6rem;
             border-radius: 999px;
             width: 260px;
-            box-shadow: none;
         }
-        .search-pill input {
-            border: 0;
-            background: transparent;
-            outline: none;
-            width: 100%;
-            font-size: 0.95rem;
-        }
+        .search-pill input { border: 0; background: transparent; outline: none; width: 100%; font-size: .95rem; }
 
-        .icons {
-            display: flex;
-            gap: 0.6rem;
-            align-items: center;
-            font-size: 1.05rem;
-        }
-        .icons a, .icons button { color: #333; text-decoration: none; padding: 0.25rem; border-radius: 6px; background: transparent; border: 0; }
+        .icons { display: flex; gap: .6rem; align-items: center; font-size: 1.05rem; }
+        .icons a, .icons button { color: #333; text-decoration: none; padding: .25rem; border-radius: 6px; background: transparent; border: 0; }
         .icons a:hover, .icons button:hover { color: #0d6efd; background: rgba(13,110,253,0.06); }
 
-        /* Tarjeta ligera */
         header.card-like {
             background: #fff;
             border-radius: 12px;
@@ -94,27 +71,57 @@
             border: 1px solid rgba(16,24,40,0.04);
         }
 
-        /* Responsive: en móvil apilar elementos y mostrar toggler */
+        /* decoración para dropdown "Cuenta" */
+        .account-dropdown {
+            background: linear-gradient(180deg,#0d0d0d 0%,#070707 100%);
+            color: #e9fdf0;
+            width: 320px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.45), inset 0 0 40px rgba(0,255,150,0.06);
+            border: 1px solid rgba(0,255,150,0.12);
+            padding: 18px;
+        }
+        .account-dropdown h5 { color: #00ffa6; font-weight: 800; margin-bottom: .5rem; letter-spacing: 1px; }
+        .account-dropdown p { color: #cfdcdc; font-size: .9rem; margin-bottom: 12px; }
+
+        .account-dropdown .form-control {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: #b7ffe1;
+            height: 38px;
+            padding: 6px 10px;
+            border-radius: 8px;
+        }
+        .account-dropdown .form-control::placeholder { color: #b7ffe1; opacity: 1; }
+        .account-dropdown .form-control:-ms-input-placeholder { color: #b7ffe1; }
+
+        .account-dropdown .btn {
+            background: linear-gradient(90deg,#00ffa6,#00c981);
+            color: #042014;
+            border: none;
+            font-weight: 700;
+            border-radius: 8px;
+            height: 38px;
+        }
+        .account-dropdown .btn:hover { filter: brightness(.95); }
+
         @media (max-width: 768px) {
-            .header-grid { padding: 0.4rem 0.6rem; gap: 0.5rem; }
             .brand img { height: 56px; }
-            .nav-links { display: none; } /* usar menú colapsable */
-            .search-pill { display: none; } /* ocultar buscador compacto en la cabecera móvil */
-            .icons { gap: 0.4rem; }
+            .nav-links { display: none; }
+            .search-pill { display: none; }
         }
     </style>
 </head>
+
 <body>
     <header class="card-like">
         <div class="header-grid">
-            <!-- LOGO (izquierda, mucho más grande) -->
             <a class="brand" href="inicio.html">
                 <img src="/img/Logo.svg" alt="Logo Sneaky">
                 <p class="title">Sneaky</p>
             </a>
 
-            <!-- NAVEGACIÓN (misma línea, ocupa el centro) -->
-            <nav class="nav-links" role="navigation" aria-label="Menú principal">
+            <nav class="nav-links">
                 <a href="#">Hombres</a>
                 <a href="#">Mujeres</a>
                 <a href="#">Niños</a>
@@ -122,38 +129,54 @@
                 <a href="#">Marcas</a>
             </nav>
 
-            <!-- DERECHA: buscador justo antes de los iconos -->
             <div class="right-group">
-                <div class="search-pill" role="search" aria-label="Buscar productos">
+                <div class="search-pill">
                     <span style="font-size:1rem;color:#888">🔍</span>
                     <input type="search" placeholder="Buscar zapatillas..." />
                 </div>
 
-                <div class="icons" aria-hidden="false">
-                    <a href="#" title="Cuenta"><i class="bi bi-person"></i></a>
+                <div class="icons">
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person"></i>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-end p-0" style="border:0; background:transparent;">
+                            <div class="account-dropdown">
+                                <h5 class="mb-2">INICIAR SESIÓN</h5>
+                                <p>Accede a tu cuenta para ver pedidos y novedades.</p>
+
+                                <form>
+                                    <input type="email" class="form-control form-control-sm mb-2" placeholder="Correo electrónico" required>
+                                    <input type="password" class="form-control form-control-sm mb-3" placeholder="Contraseña" required>
+                                    <button type="submit" class="btn btn-sm w-100">Entrar</button>
+                                </form>
+
+                                <p class="mt-2 text-center" style="color:#9ecfb7; font-size:.85rem;">
+                                    <a href="#" style="color:#b7ffe1; text-decoration:none;">¿Olvidaste tu contraseña?</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                     <a href="#" title="Favoritos"><i class="bi bi-heart"></i></a>
                     <a href="#" title="Bolsa"><i class="bi bi-bag"></i></a>
 
-                    <!-- BOTÓN MOVIL (visible en móvil) -->
-                    <button class="navbar-toggler d-md-none ms-2" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#menuMobile" aria-label="Abrir menú móvil">
+                    <button class="navbar-toggler d-md-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#menuMobile">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- MENÚ MÓVIL -->
         <div class="collapse" id="menuMobile">
             <nav class="bg-white p-3 d-md-none">
-                <a class="d-block py-2 text-dark text-decoration-none" href="#">Hombres</a>
-                <a class="d-block py-2 text-dark text-decoration-none" href="#">Mujeres</a>
-                <a class="d-block py-2 text-dark text-decoration-none" href="#">Niños</a>
-                <a class="d-block py-2 text-dark text-decoration-none" href="#">Novedades</a>
-                <a class="d-block py-2 text-dark text-decoration-none" href="#">Marcas</a>
-                <div class="pt-2">
-                    <input class="form-control" type="search" placeholder="Buscar..." />
-                </div>
+                <a class="d-block py-2 text-dark" href="#">Hombres</a>
+                <a class="d-block py-2 text-dark" href="#">Mujeres</a>
+                <a class="d-block py-2 text-dark" href="#">Niños</a>
+                <a class="d-block py-2 text-dark" href="#">Novedades</a>
+                <a class="d-block py-2 text-dark" href="#">Marcas</a>
+                <input class="form-control mt-2" type="search" placeholder="Buscar..." />
             </nav>
         </div>
     </header>
