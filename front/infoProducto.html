@@ -85,6 +85,10 @@
             background: black !important;
             color: white !important;
         }
+        .carousel-control-next,
+.carousel-control-prev  {
+    filter: invert(100%);
+}
 
         @media(max-width: 768px) {
             .producto-titulo {
@@ -154,13 +158,38 @@
             let tallas = [...new Set(variantes.map(v => v.size))];
             let colores = [...new Set(variantes.map(v => v.color))];
 
+            let imgs = [];
+            try {
+                const resImg = await fetch(`http://localhost:8080/api/products/${id}/images`);
+                imgs = await resImg.json();
+            } catch (error) {
+                console.error("Error al cargar imágenes:", error);
+            }
+            
+            let carruselHTML = `<div id="carouselProducto" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            ${imgs.map((img, index) => `
+                <div class="carousel-item ${index === 0 ? "active" : ""}">
+                    <img src="${img.imageUrl}" class="d-block w-100 producto-img" alt="${producto.name}">
+                </div>
+            `).join('')}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselProducto" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselProducto" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+        </button>
+    </div>`;
+
             let contenido = document.getElementById("producto-informacion");
 
             contenido.innerHTML = `
-        <div class="col-md-6">
-            <img src="${producto.imageUrl}" class="producto-img">
+         <div class="col-md-6">
+            ${carruselHTML}
         </div>
-
         <div class="col-md-6">
             <h2 class="producto-titulo">${producto.name}</h2>
             <p class="text-muted">Marca: ${producto.brand.name}</p>
@@ -246,4 +275,5 @@
     </script>
 
 </body>
+
 </html>

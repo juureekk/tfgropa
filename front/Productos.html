@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
@@ -57,6 +58,13 @@
                 border-radius: 50px;
                 padding: 12px 18px;
             }
+
+            .card-img-top {
+                height: 50px;
+                object-fit: cover;
+                width: 100%;
+            }
+
         }
     </style>
 
@@ -108,7 +116,7 @@
                 <button class="btn btn-outline-dark mb-3 btn-toggle-filtros" onclick="toggleFiltros()">
                     Mostrar / Ocultar filtros
                 </button>
-                <!--Aqui va la zona de productos mas las opciones de ordenamiento por precio....-->
+                <!--Aqui va la zona de productos mas las opciones de ordenamiento por precio,....-->
                 <div class="toolbar js-Toolbar">
                     <div class="toolbar__title">
                         <div class="Search-title">
@@ -187,8 +195,6 @@
 
         // Cargar productos
         async function cargarProductos() {
-            /*Como en la api el controlador de productos tiene la paginacion por defecto page y size entonces le pasamos por url el tamaño de la pagina
-            y la cantidad de los productos en este caso le pasamos 500*/
             const res = await fetch("http://localhost:8080/api/products?page=0&size=500");
             const data = await res.json();
 
@@ -198,30 +204,56 @@
         }
 
         // Mostrar productos
-        function mostrarProductos(productos) {
+        async function mostrarProductos(productos) {
             const contenedor = document.getElementById("lista-productos");
             contenedor.innerHTML = "";
 
 
-            productos.forEach(producto => {
-                contenedor.innerHTML += `
-      <div class="col-md-4 mb-4">
-        <div class="card h-100" onclick="verProducto(${producto.id})" style="cursor:pointer;">
-          <img src="${producto.imageUrl}" class="card-img-top" alt="${producto.name}">
-          <div class="card-body">
-            <h5>${producto.name}</h5>
-            <p>${producto.price} €</p>
-            <button class="btn btn-primary">Añadir</button>
-            <button class="btn btn-primary">Favoritos</button>
-          </div>
+            const imagenesDeProductos = await Promise.all(
+                productos.map(async (p) => {
+                    try {
+                        const res = await fetch(`http://localhost:8080/api/products/${p.id}/images`);
+                        const imgs = await res.json();
+
+                        if (imgs.length === 0) return "imagenes/default.png";
+
+                        const principal = imgs.find(i => i.primary) || imgs[0];
+                        return principal.imageUrl;
+
+                    } catch (error) {
+                        console.error("Error cargando imágenes del producto", p.id, error);
+                        return "imagenes/default.png";
+                    }
+                })
+            );
+
+
+            let html = "";
+
+            productos.forEach((producto, i) => {
+                html += `
+        <div class="col-md-4 mb-4">
+            <div class="card h-100" onclick="verProducto(${producto.id})" style="cursor:pointer;">
+                <img src="${imagenesDeProductos[i]}" class="card-img-top" alt="${producto.name}">
+                <div class="card-body text-center">
+                    <h5>${producto.name}</h5>
+                    <p>${producto.price} €</p>
+                    <button class="btn btn-primary">Añadir</button>
+                    <button class="btn btn-primary">Favoritos</button>
+                </div>
+            </div>
         </div>
-      </div> 
-    `;
+        `;
             });
+
+            contenedor.innerHTML = html;
+
             ContadorProductos(productos.length);
         }
+
+
         /*Aqui es la funcion que lleva a la pagina de informacion del producto*/
-        function verProducto(id){
+        function verProducto(id) {
             window.location.href = `infoProducto.html?id=${id}`;
         }
         async function loadFragment(url, targetId) {
